@@ -1,11 +1,10 @@
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 public class Solution {
 
     public static void main(String[] args) {
-        Integer[] array = new Integer[]{50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 70, null, null, 87, null, null};
+        Integer[] array =
+                new Integer[]{50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 70, null, null, 87, null, null};
         Node root = constructTree(array);
         /*display(root);
         System.out.println(size(root));
@@ -18,45 +17,96 @@ public class Solution {
         System.out.println();
         postOrder(root);
         System.out.println();
-        displayNodesByLevel(root);*/
+        displayNodesByLevel(root);
         iterativeTraversal(root);
+        System.out.println(find(root, 87));
+        List<Integer> path = new ArrayList<>();
+        find(root, 70, path);
+        System.out.println(path);
+        printNodesByLevel(root, 4);*/
     }
 
-    public static void iterativeTraversal(Node node)
+    public static void printNodesByLevel(Node node, int targetLevel) {
+        if (node == null)
+            return;
+        printNodesByLevel(node, targetLevel, 0);
+    }
+
+    private static void printNodesByLevel(Node node, int targetLevel, int currentLevel)
     {
         if(node == null)
+            return;
+        else if(currentLevel == targetLevel)
+        {
+            System.out.print(node.data + " ");
+            return;
+        }
+        printNodesByLevel(node.left, targetLevel, currentLevel+1);
+        printNodesByLevel(node.right, targetLevel, currentLevel+1);
+    }
+
+    public static boolean find(Node node, int data) {
+        if (node == null)
+            return false;
+        else if (node.data == data)
+            return true;
+        else if (find(node.left, data))
+            return true;
+        else if (find(node.right, data))
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean find(Node node, int data, List<Integer> path) {
+        if (node == null)
+            return false;
+        else if (node.data == data) {
+            path.add(node.data);
+            return true;
+        }
+
+        boolean isLeft = find(node.left, data, path);
+        if (isLeft) {
+            path.add(node.data);
+            return true;
+        }
+
+        boolean isRight = find(node.right, data, path);
+        if (isRight) {
+            path.add(node.data);
+            return true;
+        }
+        return false;
+    }
+
+
+    public static void iterativeTraversal(Node node) {
+        if (node == null)
             return;
         Stack<Pair> stack = new Stack<>();
         Pair rootPair = new Pair(node, 1);
         stack.push(rootPair);
         String pre = "";
-        String in  = "";
+        String in = "";
         String post = "";
-        while(!stack.isEmpty())
-        {
+        while (!stack.isEmpty()) {
             Pair top = stack.peek();
-            if(top.state == 1)
-            {
+            if (top.state == 1) {
                 pre = pre + top.node.data + " ";
-                if(top.node.left != null)
-                {
+                if (top.node.left != null) {
                     Pair newPair = new Pair(top.node.left, 1);
                     stack.push(newPair);
                 }
                 top.state++;
-            }
-            else if(top.state == 2)
-            {
+            } else if (top.state == 2) {
                 in = in + top.node.data + " ";
-                if(top.node.right != null)
-                {
+                if (top.node.right != null) {
                     Pair newPair = new Pair(top.node.right, 1);
                     stack.push(newPair);
                 }
                 top.state++;
-            }
-            else if(top.state == 3)
-            {
+            } else if (top.state == 3) {
                 post = post + top.node.data + " ";
                 stack.pop();
             }
@@ -66,49 +116,43 @@ public class Solution {
         System.out.println(post);
     }
 
-    public static void displayNodesByLevel(Node node)
-    {
-        if(node == null)
+    public static void displayNodesByLevel(Node node) {
+        if (node == null)
             return;
         Queue<Node> queue = new ArrayDeque<>();
         queue.add(node);
-        while(!queue.isEmpty())
-        {
+        while (!queue.isEmpty()) {
             int size = queue.size();
-            for(int index=0; index<size; index++)
-            {
+            for (int index = 0; index < size; index++) {
                 Node temp = queue.remove();
                 System.out.print(temp.data + " ");
-                if(temp.left != null)
+                if (temp.left != null)
                     queue.add(temp.left);
-                if(temp.right != null)
+                if (temp.right != null)
                     queue.add(temp.right);
             }
             System.out.println();
         }
     }
 
-    public static void postOrder(Node node)
-    {
-        if(node == null)
+    public static void postOrder(Node node) {
+        if (node == null)
             return;
         postOrder(node.left);
         postOrder(node.right);
         System.out.print(node.data + " ");
     }
 
-    public static void inOrder(Node node)
-    {
-        if(node == null)
+    public static void inOrder(Node node) {
+        if (node == null)
             return;
         inOrder(node.left);
         System.out.print(node.data + " ");
         inOrder(node.right);
     }
 
-    public static void preOrder(Node node)
-    {
-        if(node == null)
+    public static void preOrder(Node node) {
+        if (node == null)
             return;
         System.out.print(node.data + " ");
         preOrder(node.left);
