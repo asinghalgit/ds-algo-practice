@@ -17,8 +17,9 @@ public class Solution {
         inOrder(root);
         System.out.println();
         postOrder(root);
-        System.out.println();*/
-        displayNodesByLevel(root);
+        System.out.println();
+        displayNodesByLevel(root);*/
+        iterativeTraversal(root);
     }
 
     public static void iterativeTraversal(Node node)
@@ -34,8 +35,35 @@ public class Solution {
         while(!stack.isEmpty())
         {
             Pair top = stack.peek();
-
+            if(top.state == 1)
+            {
+                pre = pre + top.node.data + " ";
+                if(top.node.left != null)
+                {
+                    Pair newPair = new Pair(top.node.left, 1);
+                    stack.push(newPair);
+                }
+                top.state++;
+            }
+            else if(top.state == 2)
+            {
+                in = in + top.node.data + " ";
+                if(top.node.right != null)
+                {
+                    Pair newPair = new Pair(top.node.right, 1);
+                    stack.push(newPair);
+                }
+                top.state++;
+            }
+            else if(top.state == 3)
+            {
+                post = post + top.node.data + " ";
+                stack.pop();
+            }
         }
+        System.out.println(pre);
+        System.out.println(in);
+        System.out.println(post);
     }
 
     public static void displayNodesByLevel(Node node)
